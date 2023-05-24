@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm i -g handlebars
+      - run: npm i handlebars
       # Run the templating
       - run:
           node ./.github/workflows/templating.mjs

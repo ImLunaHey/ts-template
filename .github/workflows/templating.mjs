@@ -70,3 +70,6 @@ traverseDirectory('template', moveFilesUpOneDir);
 
 // Delete /template
 rmSync('template', { recursive: true, force: true });
+
+// Delete /node_modules
+rmSync('node_modules', { recursive: true, force: true });
