@@ -11,6 +11,8 @@ import { dirname, join as joinPath } from 'path';
  * @param {(filePath: string) => Promise<void>} processFile
  */
 const traverseDirectory = async (dirPath, processFile) => {
+    console.log('Traversing %s', dirPath);
+
     // Read the contents of the directory
     const files = await readdir(dirPath);
     
@@ -34,6 +36,8 @@ const traverseDirectory = async (dirPath, processFile) => {
  * @param {string} filePath 
  */
 const buildTemplate = async (filePath) => {
+    console.log('Building %s', filePath);
+
     // Read the template file
     const templateFile = await readFile(filePath, 'utf-8');
 
@@ -52,6 +56,7 @@ const buildTemplate = async (filePath) => {
  * @param {string} filePath 
  */
 const moveFilesUpOneDir = async (filePath) => {
+    console.log('Moving files from %s to %s', filePath, filePath.replace('template/', ''));
     await traverseDirectory(dirname(filePath), async filePath => {
         const newPath = filePath.replace('template/', '');
         try {
