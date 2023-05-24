@@ -22,7 +22,7 @@ const schema = z.object({
     /**
      * The current commit hash of this deployment
      */
-    GIT_COMMIT_SHA: z.string(),
+    GIT_COMMIT_SHA: z.string().optional(),
 });
 
 const processEnv = {
