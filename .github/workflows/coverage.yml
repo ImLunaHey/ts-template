@@ -12,6 +12,8 @@ jobs:
     # Don't run this in the template repo or more than once in the forked repo
     if: ${{ github.repository != 'imlunahey/ts-template' && '[ -d "template" ]' }}
     runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
 
   coverage:
     needs: can-run
