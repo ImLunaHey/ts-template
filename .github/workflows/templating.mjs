@@ -53,8 +53,7 @@ const buildTemplate = async (filePath) => {
  */
 const moveFilesUpOneDir = async (filePath) => {
     await traverseDirectory(dirname(filePath), async filePath => {
-        const parentDir = dirname(filePath);
-        const newPath = joinPath(parentDir, '..', filePath.substring(filePath.lastIndexOf('/')));
+        const newPath = filePath.replace('template/', '');
         await moveFile(filePath, newPath);
     });
 };
@@ -66,10 +65,10 @@ await rm('README.md');
 await rm('tsconfig.json');
 
 // Replace all the {{ENV}} in the template files
-await traverseDirectory('template', buildTemplate);
+await traverseDirectory('./template', buildTemplate);
 
 // Move files from /template to .
-await traverseDirectory('template', moveFilesUpOneDir);
+await traverseDirectory('./template', moveFilesUpOneDir);
 
 // Delete /template
 await rm('template', { recursive: true, force: true });
