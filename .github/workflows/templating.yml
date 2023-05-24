@@ -5,7 +5,7 @@ on: [push]
 jobs:
   run-templating:
     # Don't run this in the template repo or more than once in the forked repo
-    if: ${{ github.repository != 'imlunahey/ts-template' && contains(github.repository, '/template') }}
+    if: ${{ github.repository != 'imlunahey/ts-template' && '[ -d "template" ]' }}
     runs-on: ubuntu-latest
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
