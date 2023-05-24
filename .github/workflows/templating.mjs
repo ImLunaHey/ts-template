@@ -41,8 +41,7 @@ const buildTemplate = (filePath) => {
     const renderedTemplate = compiledTemplate(process.env);
 
     // Write back over the templated file
-    console.log(filePath);
-    // writeFileSync(filePath, renderedTemplate);
+    writeFileSync(filePath, renderedTemplate);
 };
 
 /**
