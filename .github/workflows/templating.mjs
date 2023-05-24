@@ -62,7 +62,7 @@ const moveFilesUpOneDir = async (filePath) => {
 await rm('.github', { recursive: true, force: true });
 await rm('.gitignore');
 await rm('README.md');
-await rm('.tsconfig.json');
+await rm('tsconfig.json');
 
 // Replace all the {{ENV}} in the template files
 await traverseDirectory('template', buildTemplate);
