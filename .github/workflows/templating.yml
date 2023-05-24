@@ -25,6 +25,10 @@ jobs:
       # Run the templating
       - run:
           node ./.github/workflows/templating.mjs
+      # Reset git
+      - run:
+          git update-ref -d HEAD
+          git rm --cached . -r
       # Force push over cloned repo
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
