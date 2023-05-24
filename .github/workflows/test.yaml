@@ -9,7 +9,13 @@ on:
 permissions: write-all
 
 jobs:
+  can-run:
+    # Don't run this in the template repo or more than once in the forked repo
+    if: ${{ github.repository != 'imlunahey/ts-template' && !contains(github.repository, '/template') }}
+    runs-on: ubuntu-latest
+
   lint:
+    needs: can-run
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +27,7 @@ jobs:
       - run: npm run lint
 
   coverage:
+    needs: can-run
     runs-on: ubuntu-latest
 
     steps:
@@ -37,6 +44,7 @@ jobs:
           commit-message: "chore: updating coverage badges"
 
   build:
+    needs: can-run
     runs-on: ubuntu-latest
 
     steps:

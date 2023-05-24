@@ -8,7 +8,13 @@ on:
       - main
 
 jobs:
+  can-run:
+    # Don't run this in the template repo or more than once in the forked repo
+    if: ${{ github.repository != 'imlunahey/ts-template' && !contains(github.repository, '/template') }}
+    runs-on: ubuntu-latest
+
   coverage:
+    needs: can-run
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
