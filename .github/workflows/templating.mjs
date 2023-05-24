@@ -61,7 +61,7 @@ const moveFilesUpOneDir = async (filePath) => {
 // Delete all the base files
 await rm('.github', { recursive: true, force: true });
 await rm('.gitignore');
-await rm('.README.md');
+await rm('README.md');
 await rm('.tsconfig.json');
 
 // Replace all the {{ENV}} in the template files
