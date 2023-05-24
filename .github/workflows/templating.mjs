@@ -1,16 +1,17 @@
 // @ts-check
 
 import { readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from 'fs';
+import { readFile, readdir, rename, rm, writeFile } from 'fs/promises';
 import handlebars from 'handlebars';
 import { dirname, join, join as joinPath } from 'path';
 
 /**
  * @param {string} dirPath 
- * @param {(filePath: string) => void} processFile
+ * @param {(filePath: string) => Promise<void>} processFile
  */
-const traverseDirectory = (dirPath, processFile) => {
+const traverseDirectory = async (dirPath, processFile) => {
     // Read the contents of the directory
-    const files = readdirSync(dirPath);
+    const files = await readdir(dirPath);
     
     // Loop over each file in that directory
     for (const file of files) {
@@ -19,9 +20,10 @@ const traverseDirectory = (dirPath, processFile) => {
 
         // Check if the current entry is a file
         if (statSync(filePath).isFile()) {
+            await processFile(filePath);
         } else {
             // Recursively traverse directories
-            traverseDirectory(filePath, processFile);
+            await traverseDirectory(filePath, processFile);
         }
     }
 };
@@ -30,9 +32,9 @@ const traverseDirectory = (dirPath, processFile) => {
  * Build a template using envs
  * @param {string} filePath 
  */
-const buildTemplate = (filePath) => {
+const buildTemplate = async (filePath) => {
     // Read the template file
-    const templateFile = readFileSync(filePath, 'utf-8');
+    const templateFile = await readFile(filePath, 'utf-8');
 
     // Compile the template
     const compiledTemplate = handlebars.compile(templateFile);
@@ -41,35 +43,35 @@ const buildTemplate = (filePath) => {
     const renderedTemplate = compiledTemplate(process.env);
 
     // Write back over the templated file
-    writeFileSync(filePath, renderedTemplate);
+    await writeFile(filePath, renderedTemplate);
 };
 
 /**
  * Move files from filePath to ..
  * @param {string} filePath 
  */
-const moveFilesUpOneDir = (filePath) => {
-    traverseDirectory(filePath, filePath => {
+const moveFilesUpOneDir = async (filePath) => {
+    await traverseDirectory(filePath, async filePath => {
         const parentDir = dirname(filePath);
         const newPath = join(parentDir, '..');
-        renameSync(filePath, newPath);
+        await rename(filePath, newPath);
     });
 };
 
 // Delete all the base files
-rmSync('.github', { recursive: true, force: true });
-rmSync('.gitignore');
-rmSync('.README.md');
-rmSync('.tsconfig.json');
+await rm('.github', { recursive: true, force: true });
+await rm('.gitignore');
+await rm('.README.md');
+await rm('.tsconfig.json');
 
 // Replace all the {{ENV}} in the template files
-traverseDirectory('template', buildTemplate);
+await traverseDirectory('template', buildTemplate);
 
 // Move files from /template to .
-traverseDirectory('template', moveFilesUpOneDir);
+await traverseDirectory('template', moveFilesUpOneDir);
 
 // Delete /template
-rmSync('template', { recursive: true, force: true });
+await rm('template', { recursive: true, force: true });
 
 // Delete /node_modules
-rmSync('node_modules', { recursive: true, force: true });
+await rm('node_modules', { recursive: true, force: true });
