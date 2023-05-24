@@ -1,0 +1,29 @@
+name: Run the templating
+
+on: [push]
+
+permissions: write-all
+
+jobs:
+  run-templating:
+    if: ${{ github.repository != 'imlunahey/ts-template' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # by default, it uses a depth of 1
+          # this fetches all history so that we can read each commit
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v3
+        with:
+            node-version: 18
+      # Run the templating
+      - run:
+          node ./templating.mjs
+             
+      # Force push over cloned repo
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: init"
+          push_options: --force
