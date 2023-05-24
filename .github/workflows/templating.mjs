@@ -1,9 +1,10 @@
 // @ts-check
 
-import { readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from 'fs';
-import { readFile, readdir, rename, rm, writeFile } from 'fs/promises';
+import { statSync } from 'fs';
+import { readdir, readFile } from 'fs/promises';
+import { rename as moveFile, rm, writeFile } from 'fs/promises';
 import handlebars from 'handlebars';
-import { dirname, join, join as joinPath } from 'path';
+import { dirname, join as joinPath } from 'path';
 
 /**
  * @param {string} dirPath 
@@ -51,10 +52,10 @@ const buildTemplate = async (filePath) => {
  * @param {string} filePath 
  */
 const moveFilesUpOneDir = async (filePath) => {
-    await traverseDirectory(filePath, async filePath => {
+    await traverseDirectory(dirname(filePath), async filePath => {
         const parentDir = dirname(filePath);
-        const newPath = join(parentDir, '..');
-        await rename(filePath, newPath);
+        const newPath = joinPath(parentDir, '..', filePath.substring(filePath.lastIndexOf('/')));
+        await moveFile(filePath, newPath);
     });
 };
 
