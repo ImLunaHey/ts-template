@@ -57,17 +57,15 @@ const buildTemplate = async (filePath) => {
  */
 const moveFilesUpOneDir = async (filePath) => {
     console.log('Moving files from %s to %s', filePath, filePath.replace('template/', ''));
-    await traverseDirectory(dirname(filePath), async filePath => {
-        const newPath = filePath.replace('template/', '');
-        try {
-            // Try to move the file
-            await moveFile(filePath, newPath);
-        } catch {
-            // If this fails try and make the directory first
-            await mkdir(dirname(newPath), { recursive: true });
-            await moveFile(filePath, newPath);
-        }
-    });
+    const newPath = filePath.replace('template/', '');
+    try {
+        // Try to move the file
+        await moveFile(filePath, newPath);
+    } catch {
+        // If this fails try and make the directory first
+        await mkdir(dirname(newPath), { recursive: true });
+        await moveFile(filePath, newPath);
+    }
 };
 
 // Delete all the base files
