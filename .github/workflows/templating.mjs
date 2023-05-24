@@ -1,7 +1,7 @@
 // @ts-check
 
 import { statSync } from 'fs';
-import { readdir, readFile } from 'fs/promises';
+import { mkdir, readdir, readFile } from 'fs/promises';
 import { rename as moveFile, rm, writeFile } from 'fs/promises';
 import handlebars from 'handlebars';
 import { dirname, join as joinPath } from 'path';
@@ -54,7 +54,14 @@ const buildTemplate = async (filePath) => {
 const moveFilesUpOneDir = async (filePath) => {
     await traverseDirectory(dirname(filePath), async filePath => {
         const newPath = filePath.replace('template/', '');
-        await moveFile(filePath, newPath);
+        try {
+            // Try to move the file
+            await moveFile(filePath, newPath);
+        } catch {
+            // If this fails try and make the directory first
+            await mkdir(dirname(newPath), { recursive: true });
+            await moveFile(filePath, newPath);
+        }
     });
 };
 
