@@ -6,6 +6,8 @@ import { rename as moveFile, rm, writeFile } from 'fs/promises';
 import handlebars from 'handlebars';
 import { dirname, join as joinPath } from 'path';
 
+handlebars.registerHelper('toLowerCase', str => str.toLowerCase());
+
 /**
  * @param {string} dirPath 
  * @param {(filePath: string) => Promise<void>} processFile

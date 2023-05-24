@@ -31,9 +31,9 @@
   },
   "exclude": ["node_modules"],
   "include": [
-    // "*.js",
-    // "*.ts",
-    // "*.json",
-    // "./src/**/*",
+    "*.js",
+    "*.ts",
+    "*.json",
+    "./src/**/*",
   ]
 }
